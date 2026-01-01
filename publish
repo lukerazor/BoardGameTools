@@ -1,0 +1,9 @@
+#!/bin/bash
+
+dest=./latest
+rsync -av --delete ./dist/ $dest
+
+cd $dest
+git add --all
+git commit -m "releasing Boardgame Tools"
+git push
