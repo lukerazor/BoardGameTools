@@ -1,15 +1,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const img0 = ref("/barenpark_blank.jpg")
-const img1 = ref("/barenpark_blank.jpg")
-const img2 = ref("/barenpark_blank.jpg")
+const img0 = ref("./barenpark_blank.jpg")
+const img1 = ref("./barenpark_blank.jpg")
+const img2 = ref("./barenpark_blank.jpg")
 
 function randomiseImages() {
 	const chkbox = document.getElementById("chkIncludeExpansion")
 	const imgCount = chkbox.checked == true ? 16 : 10
 
-	let images = Array.from(new Array(imgCount), (x,i) => `/barenpark_${`${i}`.padStart(2, "0")}.jpg`)
+	let images = Array.from(new Array(imgCount), (x,i) => `./barenpark_${`${i}`.padStart(2, "0")}.jpg`)
 
 	const randomImages = []
 
@@ -19,6 +19,7 @@ function randomiseImages() {
 
 		images.splice(idx, 1)
 	}
+	
 
 	img0.value = randomImages[0]
 	img1.value = randomImages[1]
