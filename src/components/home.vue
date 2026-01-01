@@ -6,7 +6,7 @@ const router = useRouter()
 </script>
 
 <template>
-  Home
+  Boardgame Tools
 
   <button @click="router.push('/barenpark_randomiser')">Barenpark Randomiser</button>
 </template>
