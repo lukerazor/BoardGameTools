@@ -1,6 +1,6 @@
 #!/bin/bash
 
-dest=./latest
+dest=./docs
 rsync -av --delete ./dist/ $dest
 
 cd $dest
