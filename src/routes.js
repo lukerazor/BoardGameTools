@@ -17,6 +17,12 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('./components/barenpark_randomiser.vue'),
     },
+    {
+      path: '/simple_scorepad',
+      name: 'Simple Scorepad',
+      component: () => import('./components/simple_scorepad.vue'),
+    },
+    
   ],
 })
 
