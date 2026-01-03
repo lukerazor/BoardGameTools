@@ -22,7 +22,11 @@ const router = createRouter({
       name: 'Simple Scorepad',
       component: () => import('./components/simple_scorepad.vue'),
     },
-    
+    {
+      path: '/bauer_scorer',
+      name: 'Bauer Scorer',
+      component: () => import('./components/bauer_scorer.vue'),
+    },
   ],
 })
 

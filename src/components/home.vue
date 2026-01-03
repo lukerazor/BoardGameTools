@@ -8,8 +8,9 @@ const router = useRouter()
 <template>
   <div>
     <h1>Boardgame Tools</h1>
-    <button @click="router.push('/barenpark_randomiser')">Barenpark Randomiser</button>
-    <button @click="router.push('/simple_scorepad')">Simple Scorepad</button>
+    <template v-for="route in router.getRoutes().filter(r => r.path != '/')">
+      <button @click="router.push(route.path)">{{ route.name }}</button>  
+    </template>
   </div>
 </template>
 
