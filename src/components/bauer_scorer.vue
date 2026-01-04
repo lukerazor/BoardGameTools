@@ -1,15 +1,79 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 
 const players = ref([])
+const styleObject = reactive({ gridTemplateColumns: "min-content"})
 
 function addPlayer() {
 	console.log("adding")
 	players.value.push(new Player())
+
+	styleObject.gridTemplateColumns = `min-content repeat(${players.value.length * 2}, 1fr)`
 }
 
 function newGame() {
 	players.value = []
+	styleObject.gridTemplateColumns = "min-content"
+}
+
+function calculateDangerPoints(iconCount) {
+	if(iconCount == 0) {
+		return 0
+	}
+
+	const allCounts = players.value.map(p => p.dangerIconCount)
+		
+	// determine first and second icon counts
+	const newPlaceStruct = (iconCount, initialNumPlayers = 0) => {
+		return {
+			iconCount: iconCount,
+			numPlayers: initialNumPlayers,
+			points: 0
+		}
+	}
+
+	let firstPlace = newPlaceStruct(0)
+	let secondPlace = newPlaceStruct(0)
+
+	allCounts.forEach(ic => {
+		if(ic > firstPlace.iconCount) {
+			secondPlace = structuredClone(firstPlace)
+				
+			firstPlace = newPlaceStruct(ic, 1)
+		} 
+		else if(ic == firstPlace.iconCount) {
+			firstPlace.numPlayers += 1
+		}
+		else if(ic > secondPlace.iconCount) {
+			secondPlace = newPlaceStruct(ic, 1)
+		}
+		else if(ic = secondPlace.iconCount) {
+			secondPlace.numPlayers += 1
+		}
+	})
+
+	console.log(firstPlace)
+	console.log(secondPlace)
+
+	if(firstPlace.numPlayers > 1) {
+		firstPlace.points = Math.ceil(18/firstPlace.numPlayers)
+	} 
+	else {
+		firstPlace.points = 12
+
+		if(secondPlace.numPlayers != 0) {
+			secondPlace.points = Math.ceil(6/secondPlace.numPlayers)
+		}
+	}
+
+	if(firstPlace.iconCount == iconCount) {
+		return firstPlace.points
+	} else if(secondPlace.iconCount == iconCount) {
+		return secondPlace.points
+	}
+
+	return 0
+	
 }
 
 /**** Classes ******/
@@ -36,7 +100,7 @@ class Player {
 	}
 	
 	dangerPoints() {
-		return 10
+		return calculateDangerPoints(this.dangerIconCount)
 		//self.parent.DangerPoints(self)
 	}
 	
@@ -103,7 +167,7 @@ class Player {
 			<button @click="newGame()">New Game</button>
 			<button @click="addPlayer()">Add Player</button>
 		</div>
-		<div class="score-grid" :style="{ gridTemplateColumns:`min-content repeat(${players.count*2}, 1fr)`}">
+		<div class="score-grid" :style="styleObject">
 			<div></div>
 			<div></div>
 			<div><img src="/bauer_travel.png"></div>
@@ -116,10 +180,10 @@ class Player {
 			<div><img src="/bauer_colour_green.png"></div>
 			<div><img src="/bauer_quests.png"></div>
 			<div><img src="/bauer_night.png"></div>
-			<div>Total</div>
+			<div class="total-row">Total</div>
 
 			<div v-for="(player, p_idx) in players" class="subgrid span-2">
-				<div class="span-2"><input v-model="players[p_idx].name"></div>
+				<div class="span-2"><input v-model="players[p_idx].name" class="fill-cell"></div>
 				
 				<span>#</span>
 				<img src="/bauer_points.png" class="icon_small" />
@@ -148,22 +212,22 @@ class Player {
 				<input type="number" min=0 v-model="player.greenTagCount"/>
 				<span>{{ player.greenTagPoints() }}</span>
 
-				<div class="span-2 inline-flex">
-					<button class="" @click="player.addQuest()">+</button>
+				<div class="array-grid span-2">
+					<button @click="player.addQuest()">+</button>
 					<template v-for="(quest, q_idx) in player.questCardPoints">
 						<input type="number" min=0 v-model="player.questCardPoints[q_idx]"/>
 					</template>
 				</div>
 
-				<div class="span-2 inline-flex">
-					<button class="" @click="player.addNightCard()">+</button>
+				<div class="array-grid span-2">
+					<button @click="player.addNightCard()">+</button>
 					<template v-for="(nightCard, nc_idx) in player.nightCardPoints">
 						<input type="number" min=0 v-model="player.nightCardPoints[nc_idx]"/>
 					</template>
 				</div>
 
 				<div></div>
-				<span>{{ player.grandTotal() }}</span>
+				<span class="total-row">{{ player.grandTotal() }}</span>
 
 			</div>
 		</div>
@@ -177,6 +241,7 @@ class Player {
 		justify-content: center;
 
 		background: #ebdcc5;
+		height: 100%;
 	}
 
 	.buttons{
@@ -197,7 +262,7 @@ class Player {
 		display: grid;
 		grid-auto-flow: column;
 		grid-template-rows: repeat(13, auto);
-		xgrid-template-columns: min-content 1fr; /* modified by code */
+		grid-template-columns: min-content 1fr; /* modified by code */
 		margin: 1rem auto;
 
 		& img {
@@ -207,6 +272,15 @@ class Player {
 		& .span-2 {
 			grid-column: span 2;
 		}
+
+		& * {
+			margin: auto;
+			padding: 0.1rem;
+		}
+	}
+
+	.total-row {
+		font-weight: bolder;
 	}
 
 	.subgrid {
@@ -219,17 +293,24 @@ class Player {
 		padding: 0.5rem;
 		background: antiquewhite;
 
-		& input {
+		border: 2px solid #ebdcc5;
+		& input[type=number] {
 			width: 3rem;
 		}
 	}
 
-	.inline-flex {
-		display: flex;
-		flex-wrap: wrap;
-
-	    align-items: flex-start;
-		justify-content: flex-start;
-		align-self: start;
+	.fill-cell {
+		width: 100%;
 	}
+
+	.array-grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.1rem;
+
+		& > button {
+			width: 3rem;
+		}
+	}
+
 </style>
