@@ -27,6 +27,12 @@ const router = createRouter({
       name: 'Bauer Scorer',
       component: () => import('./components/bauer_scorer.vue'),
     },
+    {
+      path: '/road_and_boats_scorer',
+      name: 'Roads & Boats Scorer',
+      component: () => import('./components/roads_and_boats_scorer.vue'),
+    },
+    
   ],
 })
 
