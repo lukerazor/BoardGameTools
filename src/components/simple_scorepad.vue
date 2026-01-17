@@ -134,7 +134,7 @@ onMounted(() => {
 				</template>
 				<template v-for="(round, r_idx) in game.rounds">
 					<div v-for="(score, s_idx) in round">
-						<input type="number" pattern="[0-9]*" oninput="validity.valid||(value='0');" inputmethod="numeric" v-model="game.rounds[r_idx][s_idx]"></input>
+						<input type="number" pattern="[0-9]*" oninput="validity.valid||(value='0');" inputmethod="numeric" v-model="game.rounds[r_idx][s_idx]" @focus="$event.target.select()"></input>
 					</div>
 				</template>
 			</template>
@@ -210,7 +210,7 @@ onMounted(() => {
 
 	input[type="number"] { 
 		appearance: textfield;
-		width: 2rem;		
+		width: 98%;		
 		justify-self: center;
 		text-align: center;
 		border: solid 1px grey;

@@ -1,9 +1,10 @@
 #!/bin/bash
 
-dest=./docs
+dest=/home/luke/src/razorfoss/trunk/lukerazor.github.io
+
 rsync -av --delete ./dist/ $dest
 
 cd $dest
 git add --all
-git commit -m "releasing Boardgame Tools"
+git commit -m "Releasing Boardgame Tools"
 git push
