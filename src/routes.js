@@ -32,6 +32,12 @@ const router = createRouter({
       name: 'Roads & Boats Scorer',
       component: () => import('./components/roads_and_boats_scorer.vue'),
     },
+    ,
+    {
+      path: '/exit_tracker',
+      name: 'Exit Tracker',
+      component: () => import('./components/ExitTracker.vue'),
+    },
     
   ],
 })

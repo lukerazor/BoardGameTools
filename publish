@@ -2,7 +2,7 @@
 
 dest=/home/luke/src/razorfoss/trunk/lukerazor.github.io
 
-rsync -av --delete ./dist/ $dest
+rsync -av --delete --exclude "/.git" ./dist/ $dest
 
 cd $dest
 git add --all
