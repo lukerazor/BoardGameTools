@@ -121,8 +121,13 @@ onMounted(() => {
 <template>
 	<div class="page-layout">
 		<div id="toolbar">
+			<div class="burger-menu-size"></div>
+			<button @click="game.addRound()" :disabled="game == null" class="toolbar-button">New Round</button>
+			<button popovertarget="new-game-popover" class="burger-menu-button burger-menu-size"></button>
+		</div>
+
+		<div id="new-game-popover" popover>
 			<button @click="selectPlayersForNewGame()">New Game</button>
-			<button @click="game.addRound()">New Round</button>
 		</div>
 		<div id="score-pad">
 			<template v-if="game != null">
@@ -175,6 +180,27 @@ onMounted(() => {
 		justify-content: space-between;
 		padding: 0.5rem 2rem;
 	}
+
+	.burger-menu-button {
+		anchor-name: --burger-menu-button;
+		background-image: url( "./burger_menu.svg" );
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+
+	.burger-menu-size {
+		height: 2rem;
+		width: 2rem;
+	}
+
+	#new-game-popover {
+		position-anchor: --burger-menu-button;
+  		top: anchor(--burger-menu-button bottom);
+  		right: anchor(--burger-menu-button right);
+	}
+
+	
 	
 	button {
 		all: revert;
