@@ -7,7 +7,7 @@ const allPlayers = ref([])
 // used for dialog
 const newPlayerName = ref("")
 const newPlayerList = ref([])
-	
+
 /***** dialog events *****/
 function selectPlayersForNewGame() {
 	selectPlayersDialog.showModal()
@@ -95,7 +95,6 @@ function saveAllPlayers() {
 }
 
 function loadAllPlayers() {
-	//window.localStorage.setItem(ALL_PLAYERS, JSON.stringify([]))
 	
 	let players = window.localStorage.getItem(ALL_PLAYERS)
 	
@@ -116,6 +115,12 @@ onMounted(() => {
 	selectPlayersDialog.addEventListener("close", selectPlayersDialogClosed);
 })
 
+function showNewGamePopover(event) {
+	const popover = document.getElementById("new-game-popover")
+
+	popover.showPopover({source: event.target})
+}
+
 </script>
 
 <template>
@@ -123,7 +128,8 @@ onMounted(() => {
 		<div id="toolbar">
 			<div class="burger-menu-size"></div>
 			<button @click="game.addRound()" :disabled="game == null" class="toolbar-button">New Round</button>
-			<button popovertarget="new-game-popover" class="burger-menu-button burger-menu-size"></button>
+			
+			<img popovertarget="new-game-popover" @click="showNewGamePopover" src="/public/burger_menu.svg" class="burger-menu-size" />
 		</div>
 
 		<div id="new-game-popover" popover>
@@ -171,6 +177,8 @@ onMounted(() => {
 
 <style>
 	.page-layout {
+		--popover-background: rgb(0 0 0 / 40%);
+
 		display: grid;
 		grid-template-rows: min-content 1fr;
 	}
@@ -179,14 +187,6 @@ onMounted(() => {
 		display: flex;
 		justify-content: space-between;
 		padding: 0.5rem 2rem;
-	}
-
-	.burger-menu-button {
-		anchor-name: --burger-menu-button;
-		background-image: url( "./burger_menu.svg" );
-		background-size: contain;
-		background-position: center;
-		background-repeat: no-repeat;
 	}
 
 	.burger-menu-size {
@@ -198,9 +198,16 @@ onMounted(() => {
 		position-anchor: --burger-menu-button;
   		top: anchor(--burger-menu-button bottom);
   		right: anchor(--burger-menu-button right);
-	}
 
-	
+		&:popover-open {
+			border: 0;
+			padding: 2rem;
+		}
+
+		&::backdrop {
+			background: var(--popover-background)
+		}
+	}
 	
 	button {
 		all: revert;
@@ -208,7 +215,7 @@ onMounted(() => {
 	}
 	
 	#score-pad {
-		--border: solid 1px grey;
+		--border: solid 1px grey;		
 
 		width: 95%;
 		display: grid;
@@ -247,6 +254,10 @@ onMounted(() => {
 	#selectPlayersDialog {
 		width: 80dvw;
 		height: 80dvh;
+
+		&::backdrop {
+			background: var(--popover-background)
+		}
 	}
 
 	.selectPlayersDialogBody {
