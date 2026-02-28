@@ -125,6 +125,8 @@ async function getUsersCollection() {
 }
 
 async function onBggUserChange() {
+	window.localStorage.setItem(STORAGE_KEY, bggUser.value)
+	
 	games.value.forEach(g => g.played = false)
 
 	getUsersCollection()
