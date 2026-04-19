@@ -31,15 +31,20 @@ const router = createRouter({
       path: '/road_and_boats_scorer',
       name: 'Roads & Boats Scorer',
       component: () => import('./components/roads_and_boats_scorer.vue'),
-    },
-    ,
+    },    
     {
       path: '/exit_tracker',
       name: 'Exit Tracker',
-      component: () => import('./components/ExitTracker.vue'),
-    },
+      component: () => import('./components/exit_tracker.vue')
+    }
+    // },    
+    // {
+    //   path: '/component_tester',
+    //   name: 'Component Tester',
+    //   component: () => import('./components/component_tester.vue'),
+    // }
     
-  ],
+  ]
 })
 
 export default router

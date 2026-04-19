@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import InputInteger from "./input_integer.vue"
 
 const game = ref(null)
 const selectedPlayers = ref([])
@@ -135,6 +136,7 @@ function showNewGamePopover(event) {
 		<div id="new-game-popover" popover>
 			<button @click="selectPlayersForNewGame()">New Game</button>
 		</div>
+
 		<div id="score-pad">
 			<template v-if="game != null">
 				<template v-for="player in game.players">
@@ -145,7 +147,7 @@ function showNewGamePopover(event) {
 				</template>
 				<template v-for="(round, r_idx) in game.rounds">
 					<div v-for="(score, s_idx) in round">
-						<input type="number" pattern="-+[0-9]*" oninput="validity.valid||(value='0');" inputmethod="numeric" v-model="game.rounds[r_idx][s_idx]" @focus="$event.target.select()"></input>
+						<InputInteger v-model="game.rounds[r_idx][s_idx]"></InputInteger>
 					</div>
 				</template>
 			</template>
@@ -175,7 +177,7 @@ function showNewGamePopover(event) {
 	</div>	
 </template>
 
-<style>
+<style scoped>
 	.page-layout {
 		--popover-background: rgb(0 0 0 / 40%);
 
