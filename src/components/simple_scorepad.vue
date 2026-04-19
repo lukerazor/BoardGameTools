@@ -145,7 +145,7 @@ function showNewGamePopover(event) {
 				</template>
 				<template v-for="(round, r_idx) in game.rounds">
 					<div v-for="(score, s_idx) in round">
-						<input type="number" pattern="[0-9]*" oninput="validity.valid||(value='0');" inputmethod="numeric" v-model="game.rounds[r_idx][s_idx]" @focus="$event.target.select()"></input>
+						<input type="number" pattern="-+[0-9]*" oninput="validity.valid||(value='0');" inputmethod="numeric" v-model="game.rounds[r_idx][s_idx]" @focus="$event.target.select()"></input>
 					</div>
 				</template>
 			</template>
