@@ -50,7 +50,6 @@ onMounted(() => {
 </script>
 
 <template>
-	<!-- <input  pattern="-{0,1}[0-9]+" v-on:beforeinput="beforeInput(value)" v-on:input="input(value)" inputmode="numeric" v-model.number="value"></input> -->
 	 <input type="number" v-model="internalValue" v-on:input="input(value, $event)" v-on:focus="$event.target.select()" inputmode="numeric"/>
 </template>
 
