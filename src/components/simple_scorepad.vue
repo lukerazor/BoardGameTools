@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import InputInteger from "./input_integer.vue"
+import Game from "../classes/GameBase.js"
 
+const gameType = ref(null)
 const game = ref(null)
 const selectedPlayers = ref([])
 const allPlayers = ref([])
@@ -10,7 +12,9 @@ const newPlayerName = ref("")
 const newPlayerList = ref([])
 
 /***** dialog events *****/
-function selectPlayersForNewGame() {
+function selectPlayersForNewGame(type) {
+	console.log(type)
+	gameType.value = type	
 	selectPlayersDialog.showModal()
 }
 
@@ -21,42 +25,10 @@ function selectPlayersDialogClosed(e) {
 		selectedPlayers.value = JSON.parse(JSON.stringify(newPlayerList.value))
 
 		scorePad.style.gridTemplateColumns = `repeat(${selectedPlayers.value.length}, 1fr)`
-		const newGame = new Game(selectedPlayers.value)
+		const newGame = Game.create("ROUND", selectedPlayers.value)
 	
 		game.value = newGame
 	}
-}
-
-/***** classes *****/
-class Game {
-	players = []
-	rounds = []
-	
-	initRound() {
-		return Array(this.players.length).fill(0)
-	}
-	
-	constructor(players) {
-		this.players = players
-		this.addRound()
-	}	
-	
-	addRound() {
-		this.rounds.push(this.initRound())
-	}
-	
-	totals() {
-		const result = this.initRound()
-	
-		for(let col = 0; col < this.players.length; col++) {
-			for(let row = 0; row < this.rounds.length; row++) {
-				result[col] += this.rounds[row][col]
-			}
-		}
-	
-		return result
-	}
-
 }
 	
 /***** model manipulation functions *****/
@@ -134,21 +106,24 @@ function showNewGamePopover(event) {
 		</div>
 
 		<div id="new-game-popover" popover>
-			<button @click="selectPlayersForNewGame()">New Game</button>
+			<button @click="selectPlayersForNewGame('ROUND')">New Round Mode Game</button>
+			<button @click="selectPlayersForNewGame('TALLY')">New Tally Mode Game</button>
 		</div>
 
 		<div id="score-pad">
 			<template v-if="game != null">
-				<template v-for="player in game.players">
-					<div class="header">{{ player }}</div>
-				</template>
-				<template v-for="total in game.totals()">
-					<div class="header totals">{{ total }}</div>
-				</template>
-				<template v-for="(round, r_idx) in game.rounds">
-					<div v-for="(score, s_idx) in round">
-						<InputInteger v-model="game.rounds[r_idx][s_idx]"></InputInteger>
-					</div>
+				<template v-if="game.type == 'ROUND'">
+					<template v-for="player in game.players">
+						<div class="header">{{ player }}</div>
+					</template>
+					<template v-for="total in game.totals()">
+						<div class="header totals">{{ total }}</div>
+					</template>
+					<template v-for="(round, r_idx) in game.rounds">
+						<div v-for="(score, s_idx) in round">
+							<InputInteger v-model="game.rounds[r_idx][s_idx]"></InputInteger>
+						</div>
+					</template>
 				</template>
 			</template>
 		</div>
@@ -200,10 +175,13 @@ function showNewGamePopover(event) {
 		position-anchor: --burger-menu-button;
   		top: anchor(--burger-menu-button bottom);
   		right: anchor(--burger-menu-button right);
-
+		
 		&:popover-open {
 			border: 0;
 			padding: 2rem;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
 		}
 
 		&::backdrop {
