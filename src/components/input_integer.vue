@@ -55,6 +55,7 @@ onMounted(() => {
 
 <style scoped>
 	input[type="number"] { 
+		width: 6rem;
 		appearance: textfield;
 	}
 </style>

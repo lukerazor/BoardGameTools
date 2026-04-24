@@ -52,12 +52,20 @@ class RoundGame extends Game {
 }
 
 class TallyGame extends Game {
-	tally = []
+	tally = {}
 
 	constructor(players) {
 		super(players)
 		this.type = "TALLY"
 		
-		this.addRound()
+		this.tally = Object.fromEntries(players.map(p => [p, []]));
+	}
+
+	total(player) {
+		return this.tally[player].reduce((tot, v) => tot + v, 0);
+	}
+
+	addTally(player) {
+		this.tally[player].push(0)
 	}
 }
