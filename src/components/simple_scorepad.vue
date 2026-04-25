@@ -103,10 +103,9 @@ const vFocus = {
 
 <template>
 	<div class="page-layout">
-		<div id="toolbar">
-			<div class="burger-menu-size"></div>
-			<button @click="game.addRound()" :disabled="game == null" class="toolbar-button">New Round</button>
-
+		<div class="toolbar">
+			<div class="burger-menu-size"><!-- blank to make the title centre--></div>
+			<div class="toolbar-title">Score Pad</div>
 			<img popovertarget="new-game-popover" @click="showNewGamePopover" src="/public/burger_menu.svg"
 				class="burger-menu-size" />
 		</div>
@@ -119,6 +118,10 @@ const vFocus = {
 		<div>
 			<template v-if="game != null">
 				<template v-if="game.type == 'ROUND'">
+					<div class="toolbar space-around">
+						<button @click="game.addRound()" :disabled="game == null">New Round</button>
+					</div>
+					
 					<div class="score-sheet round-page" :style="{ gridTemplateColumns: 'repeat(' + game.players.length + ', 1fr)' }">
 
 						<template v-for="player in game.players">
@@ -192,10 +195,19 @@ const vFocus = {
 	grid-template-rows: min-content 1fr;
 }
 
-#toolbar {
+.toolbar {
 	display: flex;
 	justify-content: space-between;
 	padding: 0.5rem 2rem;
+}
+
+.space-around {
+	justify-content: space-around;
+}
+
+.toolbar-title {
+	font-size: larger;
+	font-weight: bold;
 }
 
 .burger-menu-size {
